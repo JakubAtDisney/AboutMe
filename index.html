@@ -525,7 +525,7 @@
         }
 
         .final-panel p {
-            color: var(--text-secondary);
+            color: var(--text-primary);
             font-size: 1.05rem;
             margin: 0 0 15px 0;
             line-height: 1.7;
@@ -585,55 +585,34 @@
                 padding-bottom: 10px;
             }
             
-/* Adjust Tab Nav to fit the button */
-    .tab-nav {
-        display: flex;
-        align-items: center; /* Centers button vertically */
-        padding-right: 10px;
-    }
+            .tab-nav {
+                display: flex;
+                align-items: center; 
+                padding-right: 10px;
+            }
 
-    /* Styling the trigger to match your existing button style */
-/* New container for the button row */
-    .share-row {
-        background: var(--nav-bg); /* Matches your nav color */
-        padding: 10px 20px;
-        text-align: center;
-        border-bottom: 2px solid #3f3f46;
-    }
-
-    /* Update trigger styling for the new row */
-    .share-trigger {
-        background: var(--accent-color);
-        border: none;
-        padding: 8px 20px;
-        border-radius: 20px;
-        font-weight: 700;
-        cursor: pointer;
-        color: #000;
-        width: 100%; /* Makes it easy to tap on mobile */
-        max-width: 300px; /* Keeps it from getting too wide on desktop */
-    }
-	
-    /* Ensure modal buttons align horizontally */
-    .btn-group-centered {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 20px;
-    }
+            .btn-group-centered {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                margin-top: 20px;
+            }
 	
             .welcome-banner {
-                margin: 20px 15px;
-                padding: 25px 20px;
-                border-left: 6px solid var(--accent-color);
-                background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(72, 219, 251, 0.1));
+                margin: 20px 15px !important;
+                padding: 25px 20px !important;
+                border-left: 6px solid var(--accent-color) !important;
+                background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(72, 219, 251, 0.05)) !important;
             }
 
             .info-card {
-                margin: 20px 15px;
-                width: auto;
+                margin: 20px 15px !important;
+                width: auto !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                border: 1px solid #3f3f46 !important;
             }
         }
+
 		
 /* --- Pinned Share Button --- */
 .share-btn {
@@ -943,7 +922,7 @@
             <div class="timeline-item">
                 <div class="timeline-content">
                     <span class="timeline-title">The Future</span>
-                    <p>I was originally scheduled to leave on August 13th, but didn't want to say goodbye, so I officially extended my program until January 14th, 2027. My ultimate goal is to either stay within the Disney Company or end up in Film Production, Video Game Development, Software Engineering, or Animation.</p>
+                    <p>I was originally scheduled to leave on August 13th, but didn't want to say goodbye, so I officially extended my program until January 14, 2027. My ultimate goal is to either stay within the Disney Company or end up in Film Production, Video Game Development, Software Engineering, or Animation.</p>
                     <img class="story-img" src="https://i.imgur.com/qkv5ucL.jpeg" loading="lazy" decoding="async" alt="Looking Forward at Disney">
 					<p style="margin-top: 15px;">Even if that doesn't happen right away, I know this experience will open doors to incredible new paths I haven't even thought of yet. Either way, sharing this Walt Disney World journey with all of you has given me memories that will last a lifetime.</p>
                 </div>

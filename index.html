@@ -24,7 +24,7 @@
     <meta property="twitter:url" content="https://jakubatdisney.github.io/AboutMe/">
     <meta property="twitter:title" content="Howdy, Jakub here!">
     <meta property="twitter:description" content="Feel free to take a yonder at my website to learn more about me, my Disney journey, and my favorite video games.">
-    <meta property="twitter:image" content="https://i.imgur.com/8Ggc7IY.jpeg">
+    <meta property="twitter:image" content="https://i.imgur.com/8Ggc7IY1.jpeg">
 	
     
 <style>
@@ -460,10 +460,10 @@
         .timeline-item:nth-child(3n):hover::before { background: var(--accent-gold); box-shadow: 0 0 10px var(--accent-gold); }
 
         .timeline-content {
-            background: var(--card-bg) !important;
+            background: var(--card-bg); !important;
             padding: 25px;
             border-radius: 12px;
-            border: 1px solid #3f3f46 !important;
+            border: 1px solid #3f3f46; !important;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
         }
@@ -525,7 +525,7 @@
         }
 
         .final-panel p {
-            color: var(--text-primary);
+            color: var(--text-secondary);
             font-size: 1.05rem;
             margin: 0 0 15px 0;
             line-height: 1.7;
@@ -585,34 +585,55 @@
                 padding-bottom: 10px;
             }
             
-            .tab-nav {
-                display: flex;
-                align-items: center; 
-                padding-right: 10px;
-            }
+/* Adjust Tab Nav to fit the button */
+    .tab-nav {
+        display: flex;
+        align-items: center; /* Centers button vertically */
+        padding-right: 10px;
+    }
 
-            .btn-group-centered {
-                display: flex;
-                gap: 10px;
-                justify-content: center;
-                margin-top: 20px;
-            }
+    /* Styling the trigger to match your existing button style */
+/* New container for the button row */
+    .share-row {
+        background: var(--nav-bg); /* Matches your nav color */
+        padding: 10px 20px;
+        text-align: center;
+        border-bottom: 2px solid #3f3f46;
+    }
+
+    /* Update trigger styling for the new row */
+    .share-trigger {
+        background: var(--accent-color);
+        border: none;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 700;
+        cursor: pointer;
+        color: #000;
+        width: 100%; /* Makes it easy to tap on mobile */
+        max-width: 300px; /* Keeps it from getting too wide on desktop */
+    }
+	
+    /* Ensure modal buttons align horizontally */
+    .btn-group-centered {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+    }
 	
             .welcome-banner {
-                margin: 20px 15px !important;
-                padding: 25px 20px !important;
-                border-left: 6px solid var(--accent-color) !important;
-                background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(72, 219, 251, 0.05)) !important;
+                margin: 20px 15px;
+                padding: 25px 20px;
+                border-left: 6px solid var(--accent-color);
+                background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(72, 219, 251, 0.1));
             }
 
             .info-card {
-                margin: 20px 15px !important;
-                width: auto !important;
-                background: rgba(255, 255, 255, 0.05) !important;
-                border: 1px solid #3f3f46 !important;
+                margin: 20px 15px;
+                width: auto;
             }
         }
-
 		
 /* --- Pinned Share Button --- */
 .share-btn {
@@ -786,7 +807,7 @@
     <div id="AboutTab" class="tab-content" style="display: block; position: relative;"> 
         <button class="share-btn" onclick="openShareModal()"><span>🔗 Share</span></button>
 
-        <div class="about-wrapper">
+        < class="about-wrapper">
 			<div class="hero-header">
 				<img src="https://i.imgur.com/8Ggc7IY.jpeg" 
 					 alt="Profile Photo" 
@@ -832,8 +853,6 @@
                 </div>
             </div>
         </div>
-
-    </div>
         
         <div class="welcome-banner">
             <strong>👋 Howdy!</strong>
@@ -922,7 +941,7 @@
             <div class="timeline-item">
                 <div class="timeline-content">
                     <span class="timeline-title">The Future</span>
-                    <p>I was originally scheduled to leave on August 13th, but didn't want to say goodbye, so I officially extended my program until January 14, 2027. My ultimate goal is to either stay within the Disney Company or end up in Film Production, Video Game Development, Software Engineering, or Animation.</p>
+                    <p>I was originally scheduled to leave on August 13th, but didn't want to say goodbye, so I officially extended my program until January 14th, 2027. My ultimate goal is to either stay within the Disney Company or end up in Film Production, Video Game Development, Software Engineering, or Animation.</p>
                     <img class="story-img" src="https://i.imgur.com/qkv5ucL.jpeg" loading="lazy" decoding="async" alt="Looking Forward at Disney">
 					<p style="margin-top: 15px;">Even if that doesn't happen right away, I know this experience will open doors to incredible new paths I haven't even thought of yet. Either way, sharing this Walt Disney World journey with all of you has given me memories that will last a lifetime.</p>
                 </div>
@@ -1256,8 +1275,6 @@
         <a href="#shows" onclick="document.querySelector('#shows').scrollIntoView({ behavior: 'smooth' }); return false;">Favorite Shows</a>
         <a href="#music" onclick="document.querySelector('#music').scrollIntoView({ behavior: 'smooth' }); return false;">Favorite Music</a>
 		</div>
-  		</div>
-
 	
         <h2>Recently Watched</h2>
         <div id="recent-movies-grid" class="mosaic-grid">

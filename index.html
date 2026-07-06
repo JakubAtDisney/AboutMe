@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Jakub</title>
 	
-    <link rel="preconnect" href="https://i.imgur.com">
+	<link rel="preconnect" href="https://i.imgur.com">
+	<link rel="dns-prefetch" href="https://i.imgur.com">
 	
     <!-- Primary Meta Tags -->
     <meta name="title" content="Howdy, Jakub here!">
-    <meta name="description" content="Feel free to take a yonder at my website to learn more about me, my Disney journey, and my favorite games.">
+    <meta name="description" content="Feel free to take a yonder at my website to learn more about me, my Disney journey, and my favorite video games.">
 
     <!-- Open Graph (Discord, iMessage, etc.) -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jakubatdisney.github.io/AboutMe/">
     <meta property="og:title" content="Howdy, Jakub here!">
-    <meta property="og:description" content="Feel free to take a yonder at my website to learn more about me, my Disney journey, and my favorite games.">
+    <meta property="og:description" content="Feel free to take a yonder at my website to learn more about me, my Disney journey, and my favorite video games.">
     <meta property="og:image" content="https://i.imgur.com/8Ggc7IY1.jpeg">
 
     <!-- Twitter / X -->
@@ -63,22 +64,17 @@
         border-bottom: 3px solid var(--accent-color);
     }
 
-    .profile-img {
-        width: 120px; 
-        height: 120px; 
-        border-radius: 50%;
-        border: 3px solid var(--accent-color); 
-        object-fit: cover;
-        margin-bottom: 15px;
-        transition: content 0.3s ease;
-        cursor: pointer;
-    }
-	
-		/* This triggers the swap on hover */
-		.profile-img:hover {
-			content: url('https://i.imgur.com/8Ggc7IY1.jpeg');
-		}
-
+		.profile-img {
+			width: 120px; 
+			height: 120px; 
+			border-radius: 50%;
+			border: 3px solid var(--accent-color); 
+			object-fit: cover;
+			margin-bottom: 15px;
+			transition: all 0.3s ease; /* Smooths out the image swap */
+			cursor: pointer;
+		}	
+		
 		/* Mobile-specific overrides */
     @media (max-width: 600px) {
         /* Ensure the mosaic items don't overflow */
@@ -464,10 +460,10 @@
         .timeline-item:nth-child(3n):hover::before { background: var(--accent-gold); box-shadow: 0 0 10px var(--accent-gold); }
 
         .timeline-content {
-            background: var(--card-bg);
+            background: var(--card-bg); !important;
             padding: 25px;
             border-radius: 12px;
-            border: 1px solid #3f3f46;
+            border: 1px solid #3f3f46; !important;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
         }
@@ -812,13 +808,15 @@
         <button class="share-btn" onclick="openShareModal()"><span>🔗 Share</span></button>
 
         <div class="about-wrapper">
-            <div class="hero-header">
-                <!-- ID added for Random Script -->
-                <img src="" alt="Profile Photo" class="profile-img" id="dynamic-profile-img">
-                <h1>Howdy, Jakub here.</h1>
-            </div>
-			
-        <div class="info-card">
+			<div class="hero-header">
+				<img src="https://i.imgur.com/8Ggc7IY.jpeg" 
+					 alt="Profile Photo" 
+					 class="profile-img" 
+					 id="profile-img" 
+					 onclick="toggleProfile()">
+				<h1>Howdy, Jakub here.</h1>
+			</div>
+			<div class="info-card">
             <div class="info-row">
                 <span class="info-icon">🎓</span>
                 <div>
@@ -1727,15 +1725,22 @@ function nativeShare() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-            const profileImg = document.getElementById('dynamic-profile-img');
-            const images = [
-                'https://i.imgur.com/aF4UwZcl.png',
-                'https://i.imgur.com/8Ggc7IY1.jpeg'
-            ];
-            profileImg.src = images[Math.floor(Math.random() * images.length)];
-        });
-    </script>
+	
+	function toggleProfile() {
+    const profileImg = document.getElementById('profile-img');
+    const img1 = 'https://i.imgur.com/8Ggc7IY.jpeg';
+    const img2 = 'https://i.imgur.com/aF4UwZc.png';
+
+    // Swap between the two images on every click
+    if (profileImg.src.includes('8Ggc7IY.jpeg')) {
+        profileImg.src = img2;
+    } else {
+        profileImg.src = img1;
+    }
+}
+	
+	
+	</script>
 	
 <!-- END OF TAB CONTENT DIVS -->
     </div> 

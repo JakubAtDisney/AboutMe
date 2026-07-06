@@ -16,17 +16,22 @@
     <meta property="og:url" content="https://jakubatdisney.github.io/AboutMe/">
     <meta property="og:title" content="Howdy, Jakub here!">
     <meta property="og:description" content="Feel free to take a yonder at my website to learn more about me, my Disney journey, and my favorite games.">
-    <meta property="og:image" content="https://i.imgur.com/8Ggc7IY.jpeg">
+    <meta property="og:image" content="https://i.imgur.com/8Ggc7IY1.jpeg">
 
     <!-- Twitter / X -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://jakubatdisney.github.io/AboutMe/">
     <meta property="twitter:title" content="Howdy, Jakub here!">
     <meta property="twitter:description" content="Feel free to take a yonder at my website to learn more about me, my Disney journey, and my favorite video games.">
-    <meta property="twitter:image" content="https://i.imgur.com/8Ggc7IY.jpeg">
+    <meta property="twitter:image" content="https://i.imgur.com/8Ggc7IY1.jpeg">
 	
     
 <style>
+	.tab-content {
+		content-visibility: auto;
+		contain-intrinsic-size: 1000px;
+	}
+	
     /* Full-Width Tab Navigation */
     .tab-nav {
         display: flex;
@@ -71,7 +76,7 @@
 	
 		/* This triggers the swap on hover */
 		.profile-img:hover {
-			content: url('https://i.imgur.com/8Ggc7IY.jpeg');
+			content: url('https://i.imgur.com/8Ggc7IY1.jpeg');
 		}
 
 		/* Mobile-specific overrides */
@@ -1726,7 +1731,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const profileImg = document.getElementById('dynamic-profile-img');
             const images = [
                 'https://i.imgur.com/aF4UwZcl.png',
-                'https://i.imgur.com/8Ggc7IY.jpeg'
+                'https://i.imgur.com/8Ggc7IY1.jpeg'
             ];
             profileImg.src = images[Math.floor(Math.random() * images.length)];
         });

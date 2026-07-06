@@ -4,11 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Jakub</title>
-    
-    <!-- Preconnect to Imgur to load images faster -->
+	
     <link rel="preconnect" href="https://i.imgur.com">
+	
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Howdy, Jakub here!">
+    <meta name="description" content="Feel free to take a yonder at my website to learn more about me, my Disney journey, and my favorite games.">
+
+    <!-- Open Graph (Discord, iMessage, etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jakubatdisney.github.io/AboutMe/">
+    <meta property="og:title" content="Howdy, Jakub here!">
+    <meta property="og:description" content="Feel free to take a yonder at my website to learn more about me, my Disney journey, and my favorite games.">
+    <meta property="og:image" content="https://i.imgur.com/8Ggc7IY.jpeg">
+
+    <!-- Twitter / X -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://jakubatdisney.github.io/AboutMe/">
+    <meta property="twitter:title" content="Howdy, Jakub here!">
+    <meta property="twitter:description" content="Feel free to take a yonder at my website to learn more about me, my Disney journey, and my favorite video games.">
+    <meta property="twitter:image" content="https://i.imgur.com/8Ggc7IY.jpeg">
+	
     
 <style>
+    /* Full-Width Tab Navigation */
+    .tab-nav {
+        display: flex;
+        width: 100%;
+        background-color: var(--nav-bg);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 2px solid #3f3f46;
+    }
+
+    .tab-nav button {
+        background-color: inherit;
+        color: var(--text-secondary);
+        border: none;
+        outline: none;
+        padding: 16px 0;
+        font-size: 1rem;
+        font-weight: 600;
+        flex: 1; /* Evenly spaced */
+        transition: 0.3s;
+        border-bottom: 3px solid transparent;
+        text-align: center;
+    }
+
+    .tab-nav button:hover { color: var(--text-primary); }
+    .tab-nav button.active {
+        color: var(--accent-color);
+        border-bottom: 3px solid var(--accent-color);
+    }
+
+    .profile-img {
+        width: 120px; 
+        height: 120px; 
+        border-radius: 50%;
+        border: 3px solid var(--accent-color); 
+        object-fit: cover;
+        margin-bottom: 15px;
+        transition: content 0.3s ease;
+        cursor: pointer;
+    }
+	
+		/* This triggers the swap on hover */
+		.profile-img:hover {
+			content: url('https://i.imgur.com/8Ggc7IY.jpeg');
+		}
+
 		/* Mobile-specific overrides */
     @media (max-width: 600px) {
         /* Ensure the mosaic items don't overflow */
@@ -738,19 +803,16 @@
         <button class="tab-links" onclick="openTab(event, 'MediaTab')">TV & Music</button>
     </div>
 	
-<div id="AboutTab" class="tab-content" style="display: block; position: relative;"> 
-    
-    <button class="share-btn" onclick="openShareModal()">
-        <span>🔗 Share</span>
-    </button>
+    <div id="AboutTab" class="tab-content" style="display: block; position: relative;"> 
+        <button class="share-btn" onclick="openShareModal()"><span>🔗 Share</span></button>
 
-    <div class="about-wrapper">
-        <div class="hero-header">
-            <img src="https://i.imgur.com/aF4UwZcl.png" alt="Profile Photo" class="profile-img">
-            <h1>Howdy, Jakub here.</h1>
-        </div>
-
-
+        <div class="about-wrapper">
+            <div class="hero-header">
+                <!-- ID added for Random Script -->
+                <img src="" alt="Profile Photo" class="profile-img" id="dynamic-profile-img">
+                <h1>Howdy, Jakub here.</h1>
+            </div>
+			
         <div class="info-card">
             <div class="info-row">
                 <span class="info-icon">🎓</span>
@@ -1659,6 +1721,15 @@ function nativeShare() {
 
     }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+            const profileImg = document.getElementById('dynamic-profile-img');
+            const images = [
+                'https://i.imgur.com/aF4UwZcl.png',
+                'https://i.imgur.com/8Ggc7IY.jpeg'
+            ];
+            profileImg.src = images[Math.floor(Math.random() * images.length)];
+        });
     </script>
 	
 <!-- END OF TAB CONTENT DIVS -->
@@ -1675,12 +1746,12 @@ function nativeShare() {
         <h3>Share My Website ✨</h3>
 
         <!-- Replace with your QR code -->
-        <img src="images/website-qr.png"
+        <img src="https://i.imgur.com/dIWucnm.png"
              alt="QR Code"
              class="qr-code">
 
         <div class="share-link-box" id="share-link">
-            https://yourwebsiteurl.com
+            https://jakubatdisney.github.io/AboutMe/
         </div>
 
         <div class="share-actions">

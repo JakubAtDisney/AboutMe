@@ -17,7 +17,7 @@
     <meta property="og:url" content="https://jakubatdisney.github.io/AboutMe/">
     <meta property="og:title" content="Howdy, Jakub here!">
     <meta property="og:description" content="Feel free to take a yonder at my website to learn more about me, my Disney journey, and my favorite video games.">
-    <meta property="og:image" content="https://i.imgur.com/8Ggc7IY1.jpeg">
+    <meta property="og:image" content="https://i.imgur.com/8Ggc7IY.jpeg">
 
     <!-- Twitter / X -->
     <meta property="twitter:card" content="summary_large_image">
@@ -463,7 +463,7 @@
             background: var(--card-bg) !important;
             padding: 25px;
             border-radius: 12px;
-            border: 1px solid #3f3f46; !important;
+            border: 1px solid #3f3f46 !important;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
         }
@@ -629,10 +629,13 @@
                 background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(72, 219, 251, 0.1));
             }
 
-            .info-card {
-                margin: 20px 15px;
-                width: auto;
+                        .info-card {
+                margin: 20px 15px !important;
+                width: auto !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                border: 1px solid #3f3f46 !important;
             }
+
         }
 		
 /* --- Pinned Share Button --- */
@@ -1279,7 +1282,7 @@
         <a href="#music" onclick="document.querySelector('#music').scrollIntoView({ behavior: 'smooth' }); return false;">Favorite Music</a>
 		</div>
 	
-        <h2>Recently Watched</h2>
+</div>  <h2>Recently Watched</h2>
         <div id="recent-movies-grid" class="mosaic-grid">
             <p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary); padding: 20px;">
                 Loading latest dairy entries...

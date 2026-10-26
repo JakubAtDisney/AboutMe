@@ -1563,191 +1563,211 @@
 </div>
 
 <script>
-// Fetch Live Letterboxd Recent Watches
-    document.addEventListener("DOMContentLoaded", function() {
+// Fetch Live Letterboxd Recent Watches with Instant Caching
+document.addEventListener("DOMContentLoaded", function() {
+    const grid = document.getElementById('recent-movies-grid');
+    
+    // 1. Instantly load from cache if available
+    const cachedHTML = localStorage.getItem('letterboxd_html_cache');
+    const cacheTime = localStorage.getItem('letterboxd_time_cache');
+    
+    if (cachedHTML) {
+        grid.innerHTML = cachedHTML;
+    }
+
+    // 2. Fetch new data if cache is older than 1 hour (3600000 ms) or doesn't exist
+    const oneHour = 60 * 60 * 1000;
+    const now = new Date().getTime();
+    
+    if (!cachedHTML || !cacheTime || (now - parseInt(cacheTime)) > oneHour) {
+        
         const letterboxdUser = 'jakub72';
         const rssUrl = `https://letterboxd.com/${letterboxdUser}/rss/`;
-        const feedApi = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+        
+        const proxies = [
+            `https://api.allorigins.win/raw?url=${encodeURIComponent(rssUrl)}`,
+            `https://corsproxy.io/?${encodeURIComponent(rssUrl)}`,
+            `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(rssUrl)}`
+        ];
 
-        fetch(feedApi)
-            .then(response => {
-                if (!response.ok) throw new Error('Network response failure');
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'ok' && data.items) {
-                    const grid = document.getElementById('recent-movies-grid');
-                    grid.innerHTML = ''; 
+        async function fetchFeed() {
+            for (const proxy of proxies) {
+                try {
+                    const response = await fetch(proxy);
+                    if (response.ok) {
+                        const text = await response.text();
+                        if (text.includes('<rss') || text.includes('<feed')) {
+                            return text;
+                        }
+                    }
+                } catch (err) {
+                    console.warn(`Proxy failed, trying next...`);
+                }
+            }
+            throw new Error('All CORS proxies failed.');
+        }
 
-                    const movieEntries = data.items
-                        .filter(item => item.link.includes('/film/'))
-                        .slice(0, 4);
+        fetchFeed()
+            .then(xmlText => {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                const items = Array.from(xmlDoc.querySelectorAll('item'));
+                
+                const movieEntries = items
+                    .filter(item => {
+                        const link = item.querySelector('link')?.textContent || '';
+                        return link.includes('/film/');
+                    })
+                    .slice(0, 4);
 
-                    if (movieEntries.length === 0) {
-                        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">No recent movies found.</p>';
-                        return;
+                if (movieEntries.length === 0) {
+                    if (!cachedHTML) grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">No recent movies found.</p>';
+                    return;
+                }
+
+                let newHTML = '';
+                movieEntries.forEach(item => {
+                    const titleRaw = item.querySelector('title')?.textContent || 'Unknown Title';
+                    let cleanTitle = titleRaw.split(' - ')[0]; 
+                    cleanTitle = cleanTitle.replace(/, (\d{4})/, ' ($1)'); 
+
+                    const pubDate = item.querySelector('pubDate')?.textContent || '';
+                    let displayDate = "";
+                    const rawDate = new Date(pubDate);
+                    if (!isNaN(rawDate)) {
+                        displayDate = rawDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     }
 
-                    movieEntries.forEach(item => {
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(item.description, 'text/html');
-                        const imgTag = doc.querySelector('img');
-                        const posterSrc = imgTag ? imgTag.src : 'https://placehold.co/160x240/27272a/e0e0e0?text=No+Cover';
+                    const description = item.querySelector('description')?.textContent || '';
+                    const htmlDoc = parser.parseFromString(description, 'text/html');
+                    const imgTag = htmlDoc.querySelector('img');
+                    const posterSrc = imgTag ? imgTag.src : 'https://placehold.co/160x240/27272a/e0e0e0?text=No+Cover';
 
-                        let cleanTitle = item.title.split(' - ')[0]; 
-                        cleanTitle = cleanTitle.replace(/, (\d{4})/, ' ($1)'); 
-
-                        let displayDate = "";
-                        const rawDate = new Date(item.pubDate);
-                        if (!isNaN(rawDate)) {
-                            displayDate = rawDate.toLocaleDateString('en-US', { 
-                                month: 'short', 
-                                day: 'numeric', 
-                                year: 'numeric' 
-                            });
-                        }
-
-                        const card = document.createElement('div');
-                        card.className = 'mosaic-item';
-                        card.innerHTML = `
+                    newHTML += `
+                        <div class="mosaic-item">
                             <img src="${posterSrc}" alt="${cleanTitle}" loading="lazy" decoding="async" style="aspect-ratio: 2/3; object-fit: cover;">
                             <div class="mosaic-title" style="flex-direction: column; padding: 10px 6px; gap: 4px;">
                                 <span style="font-weight: 600; text-align: center; display: block; width: 100%;">${cleanTitle}</span>
                                 <span style="font-size: 0.65rem; color: var(--text-secondary); display: block;">Watched: ${displayDate}</span>
                             </div>
-                        `;
-                        grid.appendChild(card);
-                    });
-                } else {
-                    throw new Error('Invalid feed status data');
+                        </div>
+                    `;
+                });
+
+                // 3. Update DOM and Cache only if there are changes or no cache exists
+                if (newHTML !== cachedHTML) {
+                    grid.innerHTML = newHTML;
+                    localStorage.setItem('letterboxd_html_cache', newHTML);
                 }
+                
+                // Reset the 1-hour timer upon successful fetch
+                localStorage.setItem('letterboxd_time_cache', now.toString());
             })
             .catch(err => {
                 console.error('Letterboxd fetch error:', err);
-                document.getElementById('recent-movies-grid').innerHTML = `
-                    <p style="grid-column: 1 / -1; text-align: center; color: #ef4444; padding: 20px;">
-                        Unable to stream recent diary entries right now.
-                    </p>
-                `;
+                // 4. Only show error if we have NO cached data to fall back on
+                if (!cachedHTML) {
+                    grid.innerHTML = `
+                        <p style="grid-column: 1 / -1; text-align: center; color: #ef4444; padding: 20px;">
+                            Unable to stream recent diary entries right now.
+                        </p>
+                    `;
+                }
             });
-    });
-    
-    // Tab Functionality
-function openTab(evt, tabName) {
-        // 1. Save scroll position if we are currently on the About tab
-        if (document.getElementById('AboutTab').style.display === 'block') {
-            sessionStorage.setItem('aboutScrollPos', window.scrollY);
-        }
-
-        // 2. Hide all tabs, remove 'active' class
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tab-links");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        
-        // 3. Show selected tab
-        document.getElementById(tabName).style.display = "block";
-        evt.currentTarget.className += " active";
-        
-        // 4. Instant navigation (no smooth scrolling)
-        if (tabName === 'AboutTab') {
-            const savedPos = sessionStorage.getItem('aboutScrollPos');
-            // The 'behavior: "auto"' ensures it is an instant jump
-            window.scrollTo({ top: savedPos ? parseInt(savedPos) : 0, behavior: 'auto' });
-        } else {
-            window.scrollTo({ top: 0, behavior: 'auto' });
-        }
     }
-	
-    // Shuffle Grid Functionality
-    document.addEventListener("DOMContentLoaded", function() {
-        const shuffleGrids = document.querySelectorAll('.shuffle-grid');
-        shuffleGrids.forEach(grid => {
-            for (let i = grid.children.length; i >= 0; i--) {
-                grid.appendChild(grid.children[Math.random() * i | 0]);
-            }
-        });
-    });
-	
-// Reset scroll position on page refresh
-    window.addEventListener('load', function() {
-        sessionStorage.removeItem('aboutScrollPos');
-        // 'history.scrollRestoration = "manual"' tells the browser: 
-        // "Don't try to remember where the user was, I'll handle it."
-        if ('scrollRestoration' in history) {
-            history.scrollRestoration = 'manual';
+});
+
+// Tab Functionality
+function openTab(evt, tabName) {
+    if (document.getElementById('AboutTab').style.display === 'block') {
+        sessionStorage.setItem('aboutScrollPos', window.scrollY);
+    }
+
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tab-links");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+    
+    if (tabName === 'AboutTab') {
+        const savedPos = sessionStorage.getItem('aboutScrollPos');
+        window.scrollTo({ top: savedPos ? parseInt(savedPos) : 0, behavior: 'auto' });
+    } else {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+}
+
+// Shuffle Grid Functionality
+document.addEventListener("DOMContentLoaded", function() {
+    const shuffleGrids = document.querySelectorAll('.shuffle-grid');
+    shuffleGrids.forEach(grid => {
+        for (let i = grid.children.length; i >= 0; i--) {
+            grid.appendChild(grid.children[Math.random() * i | 0]);
         }
-        window.scrollTo(0, 0);
     });
+});
+
+// Reset scroll position on page refresh
+window.addEventListener('load', function() {
+    sessionStorage.removeItem('aboutScrollPos');
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+});
 
 function openShareModal() {
-document.getElementById('share-modal').style.display = 'flex';
+    document.getElementById('share-modal').style.display = 'flex';
 }
 
 function closeShareModal(event) {
-if (!event || event.target.id === 'share-modal') {
-    document.getElementById('share-modal').style.display = 'none';
-}
+    if (!event || event.target.id === 'share-modal') {
+        document.getElementById('share-modal').style.display = 'none';
+    }
 }
 
 function copyLink() {
-const link =
-    document.getElementById('share-link').innerText.trim();
-
-navigator.clipboard.writeText(link).then(() => {
-    const btn =
-        document.querySelector('.copy-btn');
-
-    const original =
-        btn.innerText;
-
-    btn.innerText = "✅ Copied!";
-
-    setTimeout(() => {
-        btn.innerText = original;
-    }, 2000);
-});
+    const link = document.getElementById('share-link').innerText.trim();
+    navigator.clipboard.writeText(link).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        const original = btn.innerText;
+        btn.innerText = "✅ Copied!";
+        setTimeout(() => {
+            btn.innerText = original;
+        }, 2000);
+    });
 }
 
 function nativeShare() {
-
-if (navigator.share) {
-
-    navigator.share({
-        title: document.title,
-        text: 'Check out my personal website!',
-        url: window.location.href
-    });
-
-} else {
-
-    alert(
-        "Sharing isn't supported on this browser. Try copying the link."
-    );
-
+    if (navigator.share) {
+        navigator.share({
+            title: document.title,
+            text: 'Check out my personal website!',
+            url: window.location.href
+        });
+    } else {
+        alert("Sharing isn't supported on this browser. Try copying the link.");
+    }
 }
-}
-
 
 function toggleProfile() {
-const profileImg = document.getElementById('profile-img');
-const img1 = 'https://i.imgur.com/8Ggc7IY.jpeg';
-const img2 = 'https://i.imgur.com/aF4UwZc.png';
+    const profileImg = document.getElementById('profile-img');
+    const img1 = 'https://i.imgur.com/8Ggc7IY.jpeg';
+    const img2 = 'https://i.imgur.com/aF4UwZc.png';
 
-// Swap between the two images on every click
-if (profileImg.src.includes('8Ggc7IY.jpeg')) {
-    profileImg.src = img2;
-} else {
-    profileImg.src = img1;
+    if (profileImg.src.includes('8Ggc7IY.jpeg')) {
+        profileImg.src = img2;
+    } else {
+        profileImg.src = img1;
+    }
 }
-}
-
-
 </script>
 
 <!-- END OF TAB CONTENT DIVS -->
